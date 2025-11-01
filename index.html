@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KnightDI</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap');
+
     * {
       margin: 0;
       padding: 0;
@@ -18,51 +20,135 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-      text-shadow: 1px 1px 8px black;
+      align-items: center;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    /* نیمه‌تار کردن بک‌گراند با لایه شیشه‌ای */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 1;
     }
 
     header {
+      position: relative;
+      z-index: 2;
+      margin-top: 10vh;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
       text-align: center;
-      padding: 2rem;
-      font-size: 3rem;
-      font-weight: bold;
+      letter-spacing: 3px;
+      color: #00c3ff;
+      text-shadow: 0 0 15px rgba(0, 195, 255, 0.9);
+      animation: glowPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from {
+        text-shadow: 0 0 15px rgba(0, 195, 255, 0.7);
+      }
+      to {
+        text-shadow: 0 0 30px rgba(0, 195, 255, 1), 0 0 60px rgba(0, 195, 255, 0.8);
+      }
     }
 
     footer {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 5vh;
+      padding: 2rem 3rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
       text-align: center;
-      padding: 2rem;
-      font-size: 1.2rem;
-      background: rgba(0, 0, 0, 0.4);
+      animation: fadeInUp 2s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    footer p {
+      margin: 1rem 0;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
     }
 
     footer a {
-      color: #a3cfff;
+      color: #00c3ff;
       text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    footer a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 0%;
+      height: 2px;
+      background: #00c3ff;
+      transition: width 0.3s ease;
+    }
+
+    footer a:hover::after {
+      width: 100%;
     }
 
     footer a:hover {
-      text-decoration: underline;
+      color: #66e0ff;
+      text-shadow: 0 0 10px #00c3ff;
+    }
+
+    /* افکت شناور */
+    footer:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+
+    /* برای موبایل */
+    @media (max-width: 600px) {
+      header {
+        font-size: 2.8rem;
+      }
+
+      footer {
+        width: 90%;
+        padding: 1.5rem;
+      }
+
+      footer p {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="overlay"></div>
   <header>KnightDI</header>
 
   <footer>
-    <p>
-      Telegram: 
-      <a href="https://t.me/YM0172" target="_blank">YM0172</a>
-    </p>
-    <p>
-      Instagram: 
-      <a href="https://instagram.com/YM0172" target="_blank">YM0172</a>
-    </p>
-    <p>
-      Steam: 
-      <a href="https://steamcommunity.com/id/KnightDI/" target="_blank">KnightDI</a>
-    </p>
+    <p>Telegram: <a href="https://t.me/YM0172" target="_blank">@YM0172</a></p>
+    <p>Instagram: <a href="https://instagram.com/YM0172" target="_blank">@YM0172</a></p>
+    <p>Steam: <a href="https://steamcommunity.com/id/KnightDI/" target="_blank">KnightDI</a></p>
   </footer>
 </body>
 </html>
