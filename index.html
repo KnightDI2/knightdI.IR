@@ -1,61 +1,45 @@
-<!doctype html>
-
-<html lang="fa" dir="rtl">
+<!DOCTYPE html><html lang="fa">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KnightDI — Mobile Neon</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KnightDI</title>
   <style>
-    :root{
-      --accent:#00eaff;
-      --accent2:#ff00ff;
-      --dark:#030518;
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Poppins',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:radial-gradient(circle at 50% 30%,rgba(0,234,255,0.1),transparent 80%),linear-gradient(135deg,var(--dark),#050835 40%,#000);color:#fff;overflow:hidden;position:relative;text-align:center;
-    }
-    header{
-      font-family:'Orbitron',sans-serif;font-size:2.8rem;color:transparent;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;text-shadow:0 0 20px rgba(0,234,255,0.4);letter-spacing:4px;animation:flicker 3s infinite alternate;margin-bottom:3rem;
-    }
-    @keyframes flicker{
-      0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;}
-      20%,24%,55%{opacity:0.5;}
-    }
-    .links{
-      display:flex;flex-direction:column;gap:1.5rem;width:80%;max-width:320px;z-index:2;
-    }
-    a{
-      display:block;padding:1rem 1.5rem;border-radius:18px;font-weight:600;text-decoration:none;font-size:1.1rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);color:var(--accent);position:relative;overflow:hidden;
-    }
-    a::before{
-      content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,234,255,0.3),rgba(255,0,255,0.2));opacity:0;transition:opacity 0.3s ease;
-    }
-    a:hover::before{opacity:1;}
-    a:hover{transform:scale(1.03);color:#fff;text-shadow:0 0 10px var(--accent);}footer{
-  position:absolute;bottom:2rem;font-size:0.9rem;color:rgba(255,255,255,0.6);
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      color: #00e6ff;
+      font-family: 'Poppins', sans-serif;
+    }h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 15px #00e6ff;
 }
 
-/* animated background particles */
-canvas{position:absolute;inset:0;z-index:0;}
+a {
+  color: #00e6ff;
+  text-decoration: none;
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: white;
+  text-shadow: 0 0 10px #00e6ff;
+}
 
   </style>
 </head>
 <body>
-  <canvas id="bg"></canvas>
-  <header>KnightDI</header>
-  <div class="links">
-    <a href="https://t.me/YM0172" target="_blank">Telegram</a>
-    <a href="https://instagram.com/YM0172" target="_blank">Instagram</a>
-    <a href="https://steamcommunity.com/id/KnightDI/" target="_blank">Steam</a>
-  </div>
-  <footer>© KnightDI 2025</footer>  <script>
-    const c=document.getElementById('bg');const ctx=c.getContext('2d');let W,H;let p=[];
-    function resize(){W=window.innerWidth;H=window.innerHeight;c.width=W;c.height=H;}
-    window.addEventListener('resize',resize);resize();
-    for(let i=0;i<40;i++)p.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1});
-    function draw(){ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='lighter';for(let i=0;i<p.length;i++){let o=p[i];o.x+=o.vx;o.y+=o.vy;if(o.x<0)o.x=W;if(o.x>W)o.x=0;if(o.y<0)o.y=H;if(o.y>H)o.y=0;let g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*8);g.addColorStop(0,'rgba(0,234,255,0.8)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,o.r*4,0,Math.PI*2);ctx.fill();}requestAnimationFrame(draw);}
-    draw();
-  </script></body>
+  <h1>KnightDI</h1>
+  <a href="https://t.me/YM0172" target="_blank">Telegram</a>
+  <a href="https://instagram.com/YM0172" target="_blank">Instagram</a>
+  <a href="https://steamcommunity.com/id/KnightDI/" target="_blank">Steam</a>
+</body>
 </html>
