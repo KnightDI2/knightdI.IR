@@ -1,36 +1,281 @@
-<!DOCTYPE html><html lang="fa">
+<!doctype html>
+
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KnightDI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>KnightDI — نسخهٔ موبایل جدید</title>
+  <meta name="description" content="صفحهٔ شخصی KnightDI — رابط کاربری موبایل‌محور، انیمیشن‌ها و تعاملات عجیب و غریب" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: black;
-      color: #00e6ff;
-      font-family: sans-serif;
+    :root{
+      --bg1:#000007; --bg2:#00121a; --accent:#00e6ff; --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.03); --neon: 0 0 18px rgba(0,230,255,0.18), 0 0 40px rgba(0,230,255,0.08);
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    a {
-      color: #00e6ff;
-      text-decoration: none;
-      margin: 0.5rem 0;
-    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;padding:0; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:#dffaff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; overflow:hidden;
+      -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;
+    }/* full-screen particle canvas behind everything */
+#bgCanvas{position:fixed;inset:0;z-index:0}
+
+.app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 18px 24px;gap:16px}
+
+header{width:100%;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:62px;height:62px;border-radius:14px;background:linear-gradient(135deg,#002233,#003344);display:flex;align-items:center;justify-content:center;box-shadow:var(--neon);transform:translateZ(0);}
+.logo svg{width:46px;height:46px;filter:drop-shadow(0 6px 18px rgba(0,230,255,0.06));}
+h1{font-size:1.05rem;margin:0;letter-spacing:0.6px}
+.subtitle{font-size:0.78rem;color:rgba(223,250,255,0.55)}
+
+/* glass card */
+.card{width:100%;max-width:720px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:18px;padding:14px;backdrop-filter: blur(8px) saturate(120%);box-shadow:0 6px 30px rgba(0,0,0,0.65);border:1px solid rgba(0,230,255,0.06);display:flex;gap:12px;align-items:center}
+
+.avatar{flex:0 0 86px;height:86px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(0,255,255,0.04), rgba(0,0,0,0.07));border:1px solid rgba(0,230,255,0.06);}
+.avatar svg{width:70px;height:70px;transform:rotateY(0deg)}
+
+.meta{flex:1}
+.meta .name{font-weight:700;font-size:1.05rem}
+.meta .desc{font-size:0.82rem;color:rgba(223,250,255,0.6);margin-top:2px}
+
+/* link grid */
+.links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin-top:10px}
+.btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.16), rgba(255,255,255,0.01));min-height:72px;border:1px solid rgba(0,230,255,0.04);cursor:pointer;transition:transform .18s ease, box-shadow .18s ease; text-decoration:none;color:inherit
+}
+.btn:active{transform:scale(.98)}
+.btn .label{font-size:0.82rem;margin-top:6px}
+
+/* floating action */
+.fab{position:fixed;right:14px;bottom:20px;background:linear-gradient(90deg,#00e6ff,#6ff3ff);color:#01293a;padding:12px 16px;border-radius:999px;font-weight:700;box-shadow:0 18px 40px rgba(0,230,255,0.16);z-index:6;border:2px solid rgba(255,255,255,0.06)}
+
+footer{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;display:flex;align-items:center;justify-content:center;z-index:5;pointer-events:none}
+.hint{background:rgba(0,0,0,0.28);padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);font-size:0.78rem;pointer-events:auto}
+
+/* micro animations */
+.glow{animation:neon 2.8s ease-in-out infinite}
+@keyframes neon{0%,100%{text-shadow: 0 0 6px rgba(0,230,255,0.12), 0 0 30px rgba(0,230,255,0.06)}50%{text-shadow: 0 0 18px rgba(0,230,255,0.18), 0 0 50px rgba(0,230,255,0.12)}}
+
+/* weird toggles panel */
+.toggles{position:fixed;left:10px;top:12px;display:flex;flex-direction:column;gap:8px;z-index:6}
+.chip{background:var(--glass);padding:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:8px;font-size:0.82rem}
+.chip input{accent-color:var(--accent)}
+
+/* responsive tweaks */
+@media (min-width:720px){body{background:radial-gradient(circle at 10% 10%, #001a22 0%, #000007 40%)} .app{padding:36px}}
+
+/* small decorative scanlines for CRT mode */
+.scanline{position:fixed;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:0}
+.scanline.active{opacity:0.08;background-image:linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);background-size:100% 3px}
+
+/* accessibility focus */
+a:focus,button:focus{outline:3px solid rgba(0,230,255,0.15);outline-offset:3px}
+
   </style>
 </head>
 <body>
-  <h1>KnightDI</h1>
-  <a href="https://t.me/YM0172" target="_blank">Telegram</a>
-  <a href="https://instagram.com/YM0172" target="_blank">Instagram</a>
-  <a href="https://steamcommunity.com/id/KnightDI/" target="_blank">Steam</a>
-</body>
-</html>
+  <canvas id="bgCanvas"></canvas>
+  <div class="scanline" id="scan"></div>  <div class="toggles" aria-hidden="false">
+    <label class="chip" title="مود CRT"><input type="checkbox" id="crt"> CRT</label>
+    <label class="chip" title="افکت صدای محیط"><input type="checkbox" id="amb"> صدای محیط</label>
+    <label class="chip" title="حالت عجیب"><input type="checkbox" id="weird"> عجیب</label>
+  </div>  <div class="app" id="app">
+    <header>
+      <div class="brand">
+        <div class="logo glow" aria-hidden>
+          <!-- knight-ish SVG mark -->
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <rect x="6" y="6" width="52" height="52" rx="10" fill="url(#g)" />
+            <g transform="translate(10,8) scale(.8)" fill="#00e6ff">
+              <path d="M24 2 L30 18 L24 22 L18 18 Z" opacity="0.95"/>
+              <circle cx="24" cy="32" r="6"/>
+            </g>
+            <defs>
+              <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#001"/><stop offset="1" stop-color="#003"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <h1>KnightDI</h1>
+          <div class="subtitle">قالب موبایلی — عجیب و چشم‌نواز</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="menu" class="chip" aria-label="اشتراک">به اشتراک بگذار</button>
+      </div>
+    </header><section class="card" role="region" aria-label="کارت نمایه">
+  <div class="avatar" id="avatar">
+    <!-- animated SVG avatar -->
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="آواتار KnightDI">
+      <defs>
+        <linearGradient id="a" x1="0" x2="1"><stop offset="0" stop-color="#002"/><stop offset="1" stop-color="#003"/></linearGradient>
+      </defs>
+      <rect x="8" y="8" width="104" height="104" rx="16" fill="url(#a)" />
+      <g transform="translate(10,12)" fill="#00e6ff">
+        <path id="helmet" d="M40 6 L70 6 L86 48 L70 68 L40 68 L24 48 Z"/>
+        <circle cx="55" cy="42" r="6"/>
+      </g>
+    </svg>
+  </div>
+  <div class="meta">
+    <div class="name">KnightDI</div>
+    <div class="desc">گیمر. خالق. عجیب‌سازِ رابط‌های کوچک.</div>
+    <div class="links" role="navigation" aria-label="لینک‌ها">
+      <a class="btn" href="https://t.me/YM0172" target="_blank" rel="noopener" data-icon="✈">Telegram<span class="label">پیام‌رسان</span></a>
+      <a class="btn" href="https://instagram.com/YM0172" target="_blank" rel="noopener" data-icon="📸">Instagram<span class="label">عکس و استوری</span></a>
+      <a class="btn" href="https://steamcommunity.com/id/KnightDI/" target="_blank" rel="noopener" data-icon="🎮">Steam<span class="label">گیمینگ</span></a>
+    </div>
+  </div>
+</section>
+
+<div style="width:100%;max-width:720px;margin-top:10px;display:flex;flex-direction:column;gap:10px">
+  <div class="card" style="flex-direction:row;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-weight:700">امکانات عجیب</div>
+      <div style="color:rgba(223,250,255,0.6);font-size:0.85rem;margin-top:6px">حالت CRT، صدای محیط، افکت‌ عجیب و اسکن لاین.</div>
+    </div>
+    <button id="random" class="fab" style="position:static;padding:10px 14px;border-radius:10px;min-width:120px;">شگفت‌زده‌ام کن</button>
+  </div>
+
+  <div class="card" id="weirdCard" style="display:none;flex-direction:column;gap:8px;">
+    <div style="font-weight:700">توضیح عجیب</div>
+    <div style="color:rgba(223,250,255,0.6);font-size:0.9rem">وقتی حالت عجیب روشن شود، صفحهٔ اصلی به آرامی دگرگون می‌شود — المان‌ها شناور می‌شوند، رنگ‌ها تغییر می‌کنند و یک رمز پنهان ظاهر می‌شود.</div>
+  </div>
+
+</div>
+
+  </div>  <footer><div class="hint" id="hint">بکش به سمت راست ↖️ برای افکت پارالاکس</div></footer>  <script>
+    // --- particle background (mobile-optimized) ---
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
+    window.addEventListener('resize', ()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
+
+    const parts = [];
+    const COUNT = Math.max(18, Math.floor((W*H)/60000));
+    for(let i=0;i<COUNT;i++) parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.6,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,alpha:Math.random()*0.6+0.2});
+    function render(){
+      ctx.clearRect(0,0,W,H);
+      // subtle radial vignette
+      const g=ctx.createLinearGradient(0,0,0,H);
+      ctx.fillStyle = 'rgba(0,6,10,0.3)';
+      ctx.fillRect(0,0,W,H);
+      parts.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x< -30) p.x=W+30; if(p.x>W+30) p.x=-30; if(p.y<-30) p.y=H+30; if(p.y>H+30) p.y=-30;
+        ctx.beginPath(); ctx.globalAlpha=p.alpha; ctx.fillStyle='rgba(0,230,255,0.07)'; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha=1;
+      requestAnimationFrame(render);
+    }
+    render();
+
+    // --- small avatar tilt effect using device orientation if available or pointer ---
+    const avatar = document.getElementById('avatar');
+    let ax=0,ay=0;
+    function applyTilt(){avatar.style.transform = `perspective(500px) rotateX(${ax}deg) rotateY(${ay}deg)`}
+    window.addEventListener('deviceorientation', (e)=>{
+      if(e.beta==null) return;
+      ax = Math.max(-12,Math.min(12, -e.gamma/8*12));
+      ay = Math.max(-12,Math.min(12, e.beta/8*12));
+      applyTilt();
+    }, true);
+    window.addEventListener('pointermove',(ev)=>{
+      const cx = innerWidth/2, cy = innerHeight/2;
+      ay = (ev.clientX - cx)/cx*6; ax = (ev.clientY - cy)/cy*-6;
+      applyTilt();
+    });
+
+    // --- toggles ---
+    const crt = document.getElementById('crt');
+    const scan = document.getElementById('scan');
+    const amb = document.getElementById('amb');
+    const weird = document.getElementById('weird');
+    const weirdCard = document.getElementById('weirdCard');
+
+    crt.addEventListener('change', ()=>{
+      scan.classList.toggle('active',crt.checked);
+      document.body.style.filter = crt.checked? 'saturate(1.05) contrast(1.06)':'none';
+    });
+
+    // ambient sound using WebAudio (no external files)
+    let audioCtx,osc;
+    amb.addEventListener('change',()=>{
+      if(amb.checked){
+        audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain(); gain.gain.value = 0.0025; // very subtle
+        osc.type='sine'; osc.frequency.value=120;
+        osc.connect(gain); gain.connect(audioCtx.destination); osc.start();
+      } else {
+        if(osc) osc.stop(); if(audioCtx) audioCtx.close();
+      }
+    });
+
+    weird.addEventListener('change', ()=>{
+      weirdCard.style.display = weird.checked? 'flex':'none';
+      if(weird.checked){
+        // pulse colors
+        document.documentElement.style.setProperty('--accent', '#ff73b8');
+        document.documentElement.style.setProperty('--bg1', '#220013');
+        document.documentElement.style.setProperty('--bg2', '#0a0016');
+      } else {
+        document.documentElement.style.setProperty('--accent', '#00e6ff');
+        document.documentElement.style.setProperty('--bg1', '#000007');
+        document.documentElement.style.setProperty('--bg2', '#00121a');
+      }
+    });
+
+    // random weirdness button
+    document.getElementById('random').addEventListener('click', ()=>{
+      const r = Math.random();
+      if(r<0.25) {crt.checked=!crt.checked; crt.dispatchEvent(new Event('change'))}
+      else if(r<0.5) {amb.checked=!amb.checked; amb.dispatchEvent(new Event('change'))}
+      else if(r<0.85){weird.checked=!weird.checked; weird.dispatchEvent(new Event('change'))}
+      else{navigator.vibrate && navigator.vibrate([20,40,20]); alert('تو یک شگفتی عجیب پیدا کردی ✨')}
+    });
+
+    // share button — tries native share then fallback copy
+    document.getElementById('menu').addEventListener('click', async ()=>{
+      const url = location.href;
+      try{
+        if(navigator.share){
+          await navigator.share({title:'KnightDI', text:'به پروفایل KnightDI سربزن', url});
+        } else {
+          await navigator.clipboard.writeText(url);
+          alert('نشانی کپی شد — الان می‌تونی پیست کنی');
+        }
+      }catch(e){console.warn(e); alert('به اشتراک‌گذاری در دسترس نیست')}
+    });
+
+    // swipe to parallax hint
+    let startX=null;
+    window.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
+    window.addEventListener('touchmove', e=>{
+      if(startX==null) return; const dx = e.touches[0].clientX - startX; const p = Math.max(-18, Math.min(18, dx/innerWidth*60)); document.querySelector('.app').style.transform = `translateX(${p}px) rotate(${p/20}deg)`;
+    });
+    window.addEventListener('touchend', ()=>{document.querySelector('.app').style.transform='none'; startX=null});
+
+    // accessibility: allow keyboard 'w' to toggle weird
+    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='w'){ weird.checked=!weird.checked; weird.dispatchEvent(new Event('change')) } });
+
+    // small progressive enhancement: animate helmet inside avatar
+    const helmet = document.getElementById('helmet');
+    let t=0; function animateHelmet(){ t+=0.04; const s = 1+Math.sin(t)/120; helmet.setAttribute('transform', `translate(0, ${Math.sin(t)/4}) scale(${s})`); requestAnimationFrame(animateHelmet);} animateHelmet();
+
+    // reduce motion user preference
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.style.setProperty('animation','none');}
+
+    // finally: tiny easter egg — long-press anywhere to download vCard
+    let pressTimer;
+    document.body.addEventListener('pointerdown', e=>{pressTimer = setTimeout(()=>downloadVCard(),1000)});
+    document.body.addEventListener('pointerup', e=>{clearTimeout(pressTimer)});
+    function downloadVCard(){
+      const v = `BEGIN:VCARD\nVERSION:3.0\nFN:KnightDI\nURL:https://steamcommunity.com/id/KnightDI/\nEND:VCARD`;
+      const blob = new Blob([v],{type:'text/vcard'}); const url = URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='KnightDI.vcf'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+
+  </script></body>
+  </html>
