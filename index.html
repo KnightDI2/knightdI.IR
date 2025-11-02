@@ -3,189 +3,231 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KnightDI — صفحهٔ اصلی</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KnightDI — Electric Theme</title>
   <style>
-    :root{
-      --bg:#000;
-      --accent:#00e6ff;
-      --muted: rgba(0,230,255,0.08);
-      --glass: rgba(255,255,255,0.03);
-      --radius: 18px;
-      --mono: 'ui-monospace', 'SFMono-Regular', Menlo, Monaco, 'Roboto Mono', 'Segoe UI Mono', monospace;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      padding:0;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(0,230,255,0.03), transparent),
-                  radial-gradient(900px 500px at 90% 90%, rgba(0,230,255,0.02), transparent),
-                  var(--bg);
-      color:var(--accent);
-      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:48px 20px;
-    }
-    .container{
-      width:100%;
-      max-width:1100px;
-      display:grid;
-      grid-template-columns:1fr 420px;
-      gap:28px;
-      align-items:start;
-    }
-    header{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:18px}
-    .brand{display:flex;flex-direction:column}
-    .brand h1{margin:0;font-size:1.25rem;letter-spacing:0.06em}
-    .brand p{margin:4px 0 0;font-size:0.85rem;color:rgba(0,230,255,0.7)}nav{display:flex;gap:10px;align-items:center}
-.btn{
-  display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:linear-gradient(180deg, rgba(0,230,255,0.03), rgba(255,255,255,0.01));
-  border:1px solid rgba(0,230,255,0.06);text-decoration:none;color:var(--accent);font-weight:600;font-size:0.95rem
-}
-.hero{
-  background:linear-gradient(180deg, rgba(0,230,255,0.02), transparent);
-  border-radius: var(--radius);
-  padding:28px;
-  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
-  border:1px solid rgba(0,230,255,0.04);
-}
-.lead{font-size:1.05rem;line-height:1.6;color:var(--accent)}
-.sub{color:rgba(0,230,255,0.6);margin-top:10px}
+    /* Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body{height:100%;}/* Base layout (keeps your original structure) */
+body.knight { margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(closest-side at 20% 20%, #001319 0%, #000000 35%, #01050a 100%); color: #00e6ff; font-family: "Segoe UI", Tahoma, Roboto, "Helvetica Neue", Arial, sans-serif; overflow: hidden; }
 
-.glass-card{
-  margin-top:18px;padding:18px;border-radius:14px;background:var(--glass);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)
+/* Canvas for lightning drawings sits behind everything */
+canvas#strike { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+
+/* Content wrapper sits above canvas */
+.wrap { position: relative; z-index: 5; text-align: center; }
+
+h1 { font-size: 2.2rem; margin-bottom: 1.2rem; letter-spacing: 0.06em; }
+
+/* Neon / electric text style */
+.neon {
+  color: #bfffff;
+  text-shadow:
+    0 0 6px rgba(0,230,255,0.65),
+    0 0 18px rgba(0,230,255,0.25),
+    0 0 36px rgba(0,200,255,0.12);
+  filter: drop-shadow(0 0 6px rgba(0,230,255,0.15));
+  display: inline-block;
 }
 
-.links{display:flex;flex-direction:column;gap:12px}
-.social{display:flex;gap:10px}
-.social a{padding:10px;border-radius:10px;border:1px dashed rgba(0,230,255,0.06);text-decoration:none;color:var(--accent);font-weight:600}
-
-.right-column{
-  display:flex;flex-direction:column;gap:18px;position:sticky;top:24px
+/* slight flicker animation to feel electric */
+@keyframes flicker {
+  0% { opacity: 1; filter: drop-shadow(0 0 10px rgba(0,230,255,0.45)); }
+  7% { opacity: 0.88; }
+  10% { opacity: 1; }
+  30% { opacity: .95; }
+  31% { opacity: 1; }
+  100% { opacity: 1; }
 }
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.002));padding:16px;border-radius:14px;border:1px solid rgba(0,230,255,0.04)}
-.small{font-size:0.85rem;color:rgba(0,230,255,0.75)}
+.flicker { animation: flicker 3s infinite; }
 
-.features{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
-.feature{padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(0,230,255,0.02), transparent);border:1px solid rgba(0,230,255,0.03)}
-.feature h3{margin:0 0 6px 0;font-size:0.95rem}
-.feature p{margin:0;font-size:0.85rem;color:rgba(0,230,255,0.7)}
-
-footer{width:100%;margin-top:40px;opacity:0.9;text-align:center;color:rgba(0,230,255,0.6)}
-
-/* subtle floating accent */
-.orb{
-  position:fixed;left:8%;top:12%;width:220px;height:220px;border-radius:50%;filter:blur(34px);opacity:0.08;pointer-events:none;background:radial-gradient(circle at 30% 30%, var(--accent), transparent 40%)
+/* Link styles as neon buttons */
+.links { display:flex; flex-direction:column; gap: .6rem; align-items:center; }
+a.btn {
+  display:inline-block;
+  min-width: 210px;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(0,230,255,0.06), rgba(0,200,255,0.02));
+  border: 1px solid rgba(0,230,255,0.15);
+  color: #00e6ff;
+  text-decoration:none;
+  font-weight:600;
+  box-shadow: 0 6px 18px rgba(0,230,255,0.03), 0 0 12px rgba(0,230,255,0.06) inset;
+  transition: transform .18s ease, box-shadow .18s ease, opacity .12s ease;
+  backdrop-filter: blur(3px);
 }
+a.btn:hover{ transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,230,255,0.08); }
+a.btn:active{ transform: translateY(-1px); }
 
-/* responsiveness */
-@media (max-width:980px){
-  .container{grid-template-columns:1fr;}
-  .right-column{position:relative;top:0}
-}
-@media (max-width:420px){
-  body{padding:28px 12px}
-  .brand h1{font-size:1rem}
-  nav .btn{padding:8px 10px;font-size:0.85rem}
-  .features{grid-template-columns:1fr}
-}
+/* small electric accent under links */
+.spark { width: 60px; height: 4px; margin-top: .45rem; border-radius: 4px; background: linear-gradient(90deg, transparent, rgba(0,230,255,0.75), transparent); animation: sparkMove 1.6s infinite; }
+@keyframes sparkMove { 0%{ transform: scaleX(.2) translateX(-40px); opacity:0 } 20%{ opacity: .95 } 50%{ transform: scaleX(1) translateX(0)} 90%{ opacity: .1 } 100%{ transform: scaleX(.2) translateX(40px); opacity:0 } }
 
-/* micro interactions */
-.btn:active{transform:translateY(1px)}
-.feature:hover{transform:translateY(-6px);transition:transform 220ms cubic-bezier(.2,.9,.3,1)}
+/* bottom credit */
+.credit { position: absolute; bottom: 18px; right: 18px; font-size: .8rem; color: rgba(0,230,255,0.35); z-index:6; }
+
+/* responsive tweaks */
+@media (min-width: 800px){ h1{ font-size: 3.2rem } a.btn{ min-width: 260px; } }
 
   </style>
 </head>
-<body>
-  <div class="orb" aria-hidden></div>  <header>
-    <div class="brand">
-      <h1>KnightDI</h1>
-      <p>its just a test by KnightDI^^</p>
-    </div>
-    <nav>
-      <a class="btn" href="#contact">تماس</a>
-      <a class="btn" href="#work">نمونه‌کار</a>
-    </nav>
-  </header>  <main class="container" role="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <h2 id="hero-title" style="margin:0 0 10px;font-size:1.4rem">سایت شیک و حرفه‌ای — کاملاً طبقِ میلِ تو</h2>
-      <p class="lead">من برات یک تک‌صفحهٔ مدرن طراحی کردم؛ مناسب برای معرفی شخصی، استودیو یا برندهای دیجیتال. رنگ‌ها، فونت و چیدمان قابل تغییرند — بهت آزادیٔ کامل میدم.</p>
-      <p class="sub">لینک‌های سریع:</p><div class="glass-card">
-    <div class="links">
-      <a href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
-      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://steamcommunity.com/" target="_blank" rel="noopener">Steam</a>
-    </div>
-  </div>
+<body class="knight">  <!-- canvas draws lightning strikes --><canvas id="strike"></canvas>
 
-  <div class="card" style="margin-top:16px">
-    <p class="small">ویژگی‌ها:</p>
-    <div class="features">
-      <div class="feature">
-        <h3>nothing</h3>
-        <p>soka blyat.</p>
-      </div>
-      <div class="feature">
-        <h3>ریسپانسیو</h3>
-        <p>قابل نمایش عالی روی موبایل و دسکتاپ.</p>
-      </div>
-      <div class="feature">
-        <h3>آمادهٔ توسعه</h3>
-        <p>قابل تبدیل به React / Next.js یا CMS در صورت نیاز.</p>
-      </div>
-      <div class="feature">
-        <h3>سفارشی‌سازی رنگ</h3>
-        <p>پالت رنگ به راحتی تغییر می‌کند تا سبکِ برندت را منعکس کند.</p>
-      </div>
-    </div>
-  </div>
+  <div class="wrap">
+    <h1 class="neon flicker">KnightDI</h1><div class="links" aria-label="لینک‌ها">
+  <a class="btn" href="#" rel="noopener noreferrer">Telegram</a>
+  <a class="btn" href="#" rel="noopener noreferrer">Instagram</a>
+  <a class="btn" href="#" rel="noopener noreferrer">Steam</a>
+  <div class="spark" aria-hidden="true"></div>
+</div>
 
-</section>
+  </div>  <div class="credit">تم الکتریکال — Lightning Theme</div>  <script>
+    // Lightning canvas script
+    const canvas = document.getElementById('strike');
+    const ctx = canvas.getContext('2d');
 
-<aside class="right-column">
-  <div class="card">
-    <h4 style="margin:0 0 6px">دربارهٔ پروژه</h4>
-    <p class="small">اگر دوست داری، می‌تونم این صفحه رو برایت به یک سایت چندصفحه‌ای، فروشگاهِ کوچک یا صفحهٔ فرود تبدیل کنم. همچنین آمادهٔ اضافه کردن فرم تماس، نقشه و انیمیشن‌های سفارشی هستم.</p>
-  </div>
+    function resize(){
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
+    addEventListener('resize', resize, {passive:true});
+    resize();
 
-  <div class="card">
-    <h4 style="margin:0 0 6px">تماس سریع</h4>
-    <p class="small">ایمیل: <a href="mailto:hello@knightdi.example" style="color:var(--accent)">hello@knightdi.example</a></p>
-    <div style="height:10px"></div>
-    <div class="social">
-      <a href="https://t.me/" target="_blank">Telegram</a>
-      <a href="https://instagram.com/" target="_blank">Instagram</a>
-      <a href="https://steamcommunity.com/" target="_blank">Steam</a>
-    </div>
-  </div>
+    // draw a single jagged lightning strike
+    function drawStrike(x, y, options = {}){
+      const segments = options.segments || 18;
+      const sway = options.sway || 120;
+      const branchProb = options.branchProb || 0.18;
+      const thickness = options.thickness || 2.2;
 
-  <div class="card">
-    <h4 style="margin:0 0 6px">ورژن</h4>
-    <p class="small">نسخهٔ اولیه — تک‌فایل HTML/CSS. مناسب برای پیش‌نمایش و استقرار سریع.</p>
-  </div>
-</aside>
-
-  </main>  <footer>
-    <p>© <span id="year"></span> KnightDI — ساخته شده با تمرکز بر سادگی و سرعت.</p>
-  </footer>  <script>
-    // set current year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // small accessibility: focus outlines for keyboard users
-    (function(){
-      function handleFirstTab(e){
-        if(e.key === 'Tab'){
-          document.documentElement.classList.add('user-is-tabbing');
-          window.removeEventListener('keydown', handleFirstTab);
-        }
+      ctx.save();
+      // glow (broad, faint)
+      ctx.strokeStyle = 'rgba(0,230,255,0.04)';
+      ctx.lineWidth = thickness * 12;
+      ctx.beginPath();
+      let cx = x, cy = 0;
+      ctx.moveTo(cx, cy);
+      for(let i=0;i<segments;i++){
+        const nx = cx + (Math.random() - 0.5) * sway;
+        const ny = cy + (innerHeight / segments) * (0.9 + Math.random() * 0.6);
+        ctx.lineTo(nx, ny);
+        cx = nx; cy = ny;
       }
-      window.addEventListener('keydown', handleFirstTab);
+      ctx.stroke();
+
+      // bright core
+      ctx.strokeStyle = 'rgba(180,255,255,0.95)';
+      ctx.lineWidth = thickness;
+      ctx.beginPath();
+      cx = x; cy = 0;
+      ctx.moveTo(cx, cy);
+      for(let i=0;i<segments;i++){
+        const nx = cx + (Math.random() - 0.5) * (sway * 0.6);
+        const ny = cy + (innerHeight / segments) * (0.95);
+        ctx.lineTo(nx, ny);
+        // occasional tiny branch
+        if(Math.random() < branchProb){
+          drawBranch(nx, ny, sway*0.3);
+        }
+        cx = nx; cy = ny;
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBranch(x,y,sway){
+      ctx.save();
+      ctx.strokeStyle = 'rgba(180,255,255,0.85)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      let cx = x, cy = y;
+      const len = 4 + Math.floor(Math.random()*6);
+      for(let i=0;i<len;i++){
+        const nx = cx + (Math.random()-0.5)*sway;
+        const ny = cy + (innerHeight/(len*6))*(1+Math.random());
+        ctx.lineTo(nx,ny);
+        cx = nx; cy = ny;
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // flash effect: overlay a tinted rectangle briefly
+    function flash(intensity = 0.18, duration = 200){
+      const start = performance.now();
+      function frame(t){
+        const elapsed = t - start;
+        const progress = Math.min(1, elapsed / duration);
+        // draw overlay
+        ctx.fillStyle = `rgba(180,240,255,${intensity * (1 - progress)})`;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        if(progress < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // clear with slight fade to allow glow trails
+    function clearFade(){
+      ctx.fillStyle = 'rgba(0,0,0,0.12)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+
+    // master loop: occasionally create strikes
+    let last = 0;
+    function loop(t){
+      clearFade();
+      // random chance for a strike each frame (rare), but also bursts
+      if(Math.random() < 0.006){
+        const x = Math.random() * canvas.width;
+        drawStrike(x,0,{segments: 20 + Math.floor(Math.random()*8), sway: 140 + Math.random()*120, thickness: 1.8 + Math.random()*1.6});
+        flash(0.22 + Math.random()*0.2, 220 + Math.random()*160);
+        // small camera-shake effect on page (subtle)
+        document.body.style.transform = 'translateY(-3px)';
+        setTimeout(()=> document.body.style.transform = '', 120);
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    // small interactive strike when clicking any button (gives feedback)
+    document.querySelectorAll('a.btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // find center x near the button
+        const r = e.currentTarget.getBoundingClientRect();
+        const x = r.left + r.width/2 + (Math.random()-0.5)*80;
+        drawStrike(x,0,{segments:12 + Math.floor(Math.random()*6), sway:80 + Math.random()*60, thickness:1.2});
+        flash(0.12,120);
+      });
+    });
+
+    // tiny ambient particles (sparks)
+    const sparks = [];
+    function emitSpark(){
+      sparks.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, t: 0, vx:(Math.random()-0.5)*0.6, vy:(Math.random()-0.2)*0.6, life: 80 + Math.random()*160 });
+    }
+    for(let i=0;i<8;i++) emitSpark();
+    function updateSparks(){
+      for(let i=sparks.length-1;i>=0;i--){
+        const s = sparks[i];
+        s.t++;
+        s.x += s.vx; s.y += s.vy;
+        ctx.fillStyle = `rgba(160,240,255,${1 - s.t/s.life})`;
+        ctx.fillRect(s.x, s.y, 1.8, 1.8);
+        if(s.t > s.life) sparks.splice(i,1);
+      }
+      if(Math.random() < 0.03) emitSpark();
+    }
+
+    // integrate spark drawing into main loop
+    (function extras(){
+      updateSparks();
+      requestAnimationFrame(extras);
     })();
+
+    // make sure canvas clears fully when user hides/minimizes and on big resize
+    document.addEventListener('visibilitychange', ()=>{ if(document.hidden) ctx.clearRect(0,0,canvas.width,canvas.height); });
+
   </script></body>
-                              </html>
+</html>
