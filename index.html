@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8" />
@@ -8,7 +7,14 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html,body{height:100%;}
-    body.knight { margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(closest-side at 20% 20%, #001319 0%, #000000 35%, #01050a 100%); color: #00e6ff; font-family: "Segoe UI", Tahoma, Roboto, "Helvetica Neue", Arial, sans-serif; overflow: hidden; }
+    body.knight {
+      margin: 0; padding: 0; height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: radial-gradient(closest-side at 20% 20%, #001319 0%, #000000 35%, #01050a 100%);
+      color: #00e6ff;
+      font-family: "Segoe UI", Tahoma, Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+    }
     canvas#strike { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
     .wrap { position: relative; z-index: 5; text-align: center; }
     h1 { font-size: 2.2rem; margin-bottom: 1.2rem; letter-spacing: 0.06em; }
@@ -62,11 +68,27 @@
     </div>
   </div>
   <div class="credit">Created by KnightDI</div>
+
   <script>
     const canvas = document.getElementById('strike');
     const ctx = canvas.getContext('2d');
     function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
     addEventListener('resize', resize, {passive:true}); resize();
+
+    // 🎵 اضافه کردن صدای رعد و برق
+    const thunderSound = new Audio('thunder-sound-375727.mp3');
+    thunderSound.volume = 0.4; // بلندی صدا (۰ تا ۱)
+    thunderSound.preload = 'auto';
+
+    function playThunder(){
+      // هر بار از اول پخش شود و کمی تاخیر برای طبیعی‌تر بودن
+      setTimeout(()=>{
+        const sound = thunderSound.cloneNode(); // تا چند صدا هم‌زمان بشن
+        sound.volume = 0.4 + Math.random() * 0.2;
+        sound.play().catch(()=>{});
+      }, 120 + Math.random()*300);
+    }
+
     function drawStrike(x, y, options = {}){
       const segments = options.segments || 18;
       const sway = options.sway || 120;
@@ -100,6 +122,7 @@
       ctx.stroke();
       ctx.restore();
     }
+
     function drawBranch(x,y,sway){
       ctx.save();
       ctx.strokeStyle = 'rgba(180,255,255,0.85)';
@@ -117,6 +140,7 @@
       ctx.stroke();
       ctx.restore();
     }
+
     function flash(intensity = 0.18, duration = 200){
       const start = performance.now();
       function frame(t){
@@ -128,30 +152,37 @@
       }
       requestAnimationFrame(frame);
     }
+
     function clearFade(){ ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+
     function loop(t){
       clearFade();
       if(Math.random() < 0.006){
         const x = Math.random() * canvas.width;
         drawStrike(x,0,{segments: 20 + Math.floor(Math.random()*8), sway: 140 + Math.random()*120, thickness: 1.8 + Math.random()*1.6});
         flash(0.22 + Math.random()*0.2, 220 + Math.random()*160);
+        playThunder(); // ⚡️ پخش صدای رعد هنگام闪
         document.body.style.transform = 'translateY(-3px)';
         setTimeout(()=> document.body.style.transform = '', 120);
       }
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
+
     document.querySelectorAll('a.btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const r = e.currentTarget.getBoundingClientRect();
         const x = r.left + r.width/2 + (Math.random()-0.5)*80;
         drawStrike(x,0,{segments:12 + Math.floor(Math.random()*6), sway:80 + Math.random()*60, thickness:1.2});
         flash(0.12,120);
+        playThunder(); // پخش صدا هنگام کلیک
       });
     });
+
     const sparks = [];
     function emitSpark(){ sparks.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, t: 0, vx:(Math.random()-0.5)*0.6, vy:(Math.random()-0.2)*0.6, life: 80 + Math.random()*160 }); }
     for(let i=0;i<8;i++) emitSpark();
+
     function updateSparks(){
       for(let i=sparks.length-1;i>=0;i--){
         const s = sparks[i];
@@ -163,6 +194,7 @@
       }
       if(Math.random() < 0.03) emitSpark();
     }
+
     (function extras(){ updateSparks(); requestAnimationFrame(extras); })();
     document.addEventListener('visibilitychange', ()=>{ if(document.hidden) ctx.clearRect(0,0,canvas.width,canvas.height); });
   </script>
